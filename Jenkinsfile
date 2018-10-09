@@ -7,10 +7,8 @@ pipeline {
                     // Optionally use a Maven environment you've configured already     
                     withMaven(jdk: 'Java', maven: 'Maven') {
                         // some block
-                         sh 'mvn clean package sonar:sonar'
+                        sh 'cd ${WORKSPACE} && mvn clean package sonar:sonar'
                     }
-
-                    
                 }
             }
         }
