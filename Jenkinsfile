@@ -12,6 +12,11 @@ pipeline {
                 }
             }
         }
+        stage('Jacoco') {
+            steps {
+                jacoco()
+            }
+        }
         stage("Quality Gate") {
             steps {
                timeout(time: 300, unit: 'SECONDS') {
