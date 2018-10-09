@@ -165,6 +165,12 @@ under the License.
         <artifactId>maven-settings</artifactId>
         <version>${project.version}</version>
       </dependency>
+        <dependency>
+                       <groupId>org.sonarsource.scanner.maven</groupId>
+                       <artifactId>sonar-maven-plugin</artifactId>
+                       <version>3.2</version>
+                </dependency>
+
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-settings-builder</artifactId>
@@ -598,6 +604,19 @@ under the License.
   </build>
 
   <profiles>
+      <profile>
+<id>sonar</id>
+<activation>
+<activeByDefault>true</activeByDefault>
+</activation>
+<properties>
+<!-- Optional URL to server. Default value is http://localhost:9000 -->
+<sonar.host.url>
+http://54.172.71.121:9000
+</sonar.host.url>
+</properties>
+</profile>
+
     <profile>
       <id>apache-release</id>
       <build>
@@ -681,6 +700,33 @@ under the License.
               </systemProperties>
             </configuration>
           </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.6.1</version>
+            <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+            </configuration>
+        </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.11</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}:${project.version}</imageName>
+                    <dockerDirectory>.</dockerDirectory>
+                    <serverId>docker-hub</serverId>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.war</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+
         </plugins>
       </build>
     </profile>
