@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sample-web
+  namespace: default
+  labels:
+    app: sample-web
+spec:
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s-app: sample-web
+  template:
+    metadata:
+      labels:
+        k8s-app: sample-web
+    spec:
+      containers:
+      - name: sample-web
+        image: nalbam/sample-web:alpine
+        ports:
+        - containerPort: 8082
+          protocol: TCP
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: sample-web
+  namespace: default
+  labels:
+    app: sample-web
+spec:
+  type: NodePort
+  ports:
+      port: 8082
+      NodePort: 8082
+  selector:
+    k8s-app: sample-web
