@@ -3,11 +3,11 @@ pipeline {
     stages {
         stage('build && SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
+                //withSonarQubeEnv('SonarQube') {
                     withMaven(jdk: 'Java', maven: 'Maven') {
                         sh 'mvn clean compile' 
                         //sonar:sonar -Drat.skip=true'
-                    }
+                   // }
                 }
             }
         }
