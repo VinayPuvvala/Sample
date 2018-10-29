@@ -31,11 +31,20 @@ pipeline {
                     }
                 }
         }
-            stage('Run kubectl') {
-                steps {
-                            sh "kubectl get pods"
-      }
-    }
+            stage('DeployToProduction') {
+            when {
+                branch 'master'
+            }
+            steps {
+                input 'Deploy to Production?'
+                milestone(1)
+                kubernetesDeploy(
+                    kubeconfigId: 'kubeconfig',
+                    configs: 'sample.yml',
+                    enableConfigSubstitution: true
+                )
+            }
+        }
               
         }
     }
