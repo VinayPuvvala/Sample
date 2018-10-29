@@ -1,16 +1,16 @@
 pipeline {
     agent any
     stages {
-        stage('build && SonarQube analysis') {
-            steps {
+        //stage('build && SonarQube analysis') {
+            //steps {
                 //withSonarQubeEnv('SonarQube') {
-                    withMaven(jdk: 'Java', maven: 'Maven') {
-                        sh 'mvn clean compile -Drat.skip=true' 
+                   // withMaven(jdk: 'Java', maven: 'Maven') {
+                      //  sh 'mvn clean compile -Drat.skip=true' 
                         //sonar:sonar -Drat.skip=true'
                    // }
-                }
-            }
-        }
+               // }
+            //}
+       // }
         
         //stage("Quality Gate") {
           // steps {
@@ -19,22 +19,20 @@ pipeline {
             //        waitForQualityGate abortPipeline: true
            //}
            //}
-        stage('Jacoco') {
-            steps {
-                jacoco()
-            }
-        }
-        stage('Package') {
-            steps {
-                       withMaven(jdk: 'Java', maven: 'Maven') {
-                        sh 'mvn package -Drat.skip=true'
-                    }
-                }
-        }
+       // stage('Jacoco') {
+         //   steps {
+           //     jacoco()
+//            }
+  //      }
+    //    stage('Package') {
+      //      steps {
+        //               withMaven(jdk: 'Java', maven: 'Maven') {
+          //              sh 'mvn package -Drat.skip=true'
+            //        }
+              //  }
+        //}
             stage('DeployToProduction') {
-            when {
-                branch 'master'
-            }
+            
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
