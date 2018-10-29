@@ -35,7 +35,7 @@ pipeline {
             
             steps {
                 script {
-                    app = docker.build(vpuvvala/demo/Apache Maven)
+                    app = docker.build(vpuvvala/demo/maven)
                     app.inside {
                         sh 'echo $(curl 18.206.96.209:9000)'
                     }
