@@ -37,7 +37,7 @@ pipeline {
                 script {
                     app = docker.build(vpuvvala/demo/Apache Maven)
                     app.inside {
-                        sh 'echo Hello, World!'
+                        sh 'echo $(curl 18.206.96.209:9000)'
                     }
                 }
             }
