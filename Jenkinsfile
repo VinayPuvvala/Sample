@@ -30,6 +30,7 @@ pipeline {
                         sh 'mvn package -Drat.skip=true'
                     }
                 }
+        }
             stage('Run kubectl') {
                 steps {
                             sh "kubectl get pods"
