@@ -36,7 +36,7 @@ pipeline {
                             sh "kubectl get pods"
       }
     }
-              }
+              
         }
     }
 
