@@ -5,7 +5,7 @@ pipeline {
             steps {
                 //withSonarQubeEnv('SonarQube') {
                     withMaven(jdk: 'Java', maven: 'Maven') {
-                        sh 'mvn clean compile' 
+                        sh 'mvn clean compile -Drat.skip=true' 
                         //sonar:sonar -Drat.skip=true'
                    // }
                 }
