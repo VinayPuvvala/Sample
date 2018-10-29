@@ -1,15 +1,15 @@
 pipeline {
     agent any
     stages {
-        //stage('build && SonarQube analysis') {
-            //steps {
+        stage('build && SonarQube analysis') {
+            steps {
                 //withSonarQubeEnv('SonarQube') {
-                   // withMaven(jdk: 'Java', maven: 'Maven') {
-                      //  sh 'mvn clean compile -Drat.skip=true' 
+                   withMaven(jdk: 'Java', maven: 'Maven') {
+                      sh 'mvn clean compile -Drat.skip=true' 
                         //sonar:sonar -Drat.skip=true'
-                   // }
-               // }
-            //}
+                    }
+                }
+            }
        // }
         
         //stage("Quality Gate") {
@@ -31,19 +31,40 @@ pipeline {
             //        }
               //  }
         //}
-            stage('DeployToProduction') {
+            stage('Build Docker Image') {
             
             steps {
-                input 'Deploy to Production?'
-                milestone(1)
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'sample.yml',
-                    enableConfigSubstitution: true
-                )
+                script {
+                    app = docker.build(DOCKER_IMAGE_NAME)
+                    app.inside {
+                        sh 'echo Hello, World!'
+                    }
+                }
             }
         }
-              
+        stage('Push Docker Image') {
+            
+            steps {
+                script {
+                    docker.withRegistry('https://hub.docker.com/r/vpuvvala/demo/', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
+            }
         }
+        //stage('DeployToProduction') {
+            
+            //steps {
+                //input 'Deploy to Production?'
+               // milestone(1)
+                //kubernetesDeploy(
+                    //kubeconfigId: 'kubeconfig',
+                   // configs: 'sample.yml',
+                   // enableConfigSubstitution: true
+               // )
+           // }
+       // }
     }
+}
 
