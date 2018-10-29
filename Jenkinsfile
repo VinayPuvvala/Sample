@@ -5,19 +5,20 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     withMaven(jdk: 'Java', maven: 'Maven') {
-                        sh 'mvn clean compile sonar:sonar -Drat.skip=true'
+                        sh 'mvn clean compile' 
+                        //sonar:sonar -Drat.skip=true'
                     }
                 }
             }
         }
         
-        stage("Quality Gate") {
-           steps {
+        //stage("Quality Gate") {
+          // steps {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
-                    waitForQualityGate abortPipeline: true
-           }
-           }
+            //        waitForQualityGate abortPipeline: true
+           //}
+           //}
         stage('Jacoco') {
             steps {
                 jacoco()
@@ -29,6 +30,11 @@ pipeline {
                         sh 'mvn package -Drat.skip=true'
                     }
                 }
+            stage('Run kubectl') {
+                steps {
+                            sh "kubectl get pods"
+      }
+    }
               }
         }
     }
