@@ -31,40 +31,19 @@ pipeline {
             //        }
               //  }
         //}
-            stage('Build Docker Image') {
+            
+        stage('DeployToProduction') {
             
             steps {
-                script {
-                    app = docker.build(vpuvvala/maven)
-                    app.inside {
-                        sh 'echo $(curl 18.206.96.209:9000)'
-                    }
-                }
+                input 'Deploy to Production?'
+               milestone(1)
+                kubernetesDeploy(
+                    kubeconfigId: 'kubeconfig',
+                    configs: 'sample.yml',
+                    enableConfigSubstitution: true
+                )
             }
         }
-        stage('Push Docker Image') {
-            
-            steps {
-                script {
-                    docker.withRegistry('https://hub.docker.com/r/vpuvvala/demo/', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }
-        //stage('DeployToProduction') {
-            
-            //steps {
-                //input 'Deploy to Production?'
-               // milestone(1)
-                //kubernetesDeploy(
-                    //kubeconfigId: 'kubeconfig',
-                   // configs: 'sample.yml',
-                   // enableConfigSubstitution: true
-               // )
-           // }
-       // }
     }
 }
 
