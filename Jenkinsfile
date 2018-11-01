@@ -1,49 +1,48 @@
 pipeline {
     agent any
     stages {
+        stage('Checkout') {
+        steps {
+            echo "Check out code"
+            }
+        }
         stage('build && SonarQube analysis') {
             steps {
-                //withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('SonarQube') {
                    withMaven(jdk: 'Java', maven: 'Maven') {
-                      sh 'mvn clean compile -Drat.skip=true' 
-                        //sonar:sonar -Drat.skip=true'
+                      sh 'mvn clean compile sonar:sonar -Drat.skip=true'
                     }
                 }
             }
-       // }
+        }
         
-        //stage("Quality Gate") {
-          // steps {
+        stage("Quality Gate") {
+           steps {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
-            //        waitForQualityGate abortPipeline: true
-           //}
-           //}
-       // stage('Jacoco') {
-         //   steps {
-           //     jacoco()
-//            }
-  //      }
-    //    stage('Package') {
-      //      steps {
-        //               withMaven(jdk: 'Java', maven: 'Maven') {
-          //              sh 'mvn package -Drat.skip=true'
-            //        }
-              //  }
-        //}
+                    waitForQualityGate abortPipeline: true
+           }
+        }
+        stage('Jacoco') {
+           steps {
+                jacoco()
+           }
+        }
+        stage('Package') {
+            steps {
+                       withMaven(jdk: 'Java', maven: 'Maven') {
+                        sh 'mvn package -Drat.skip=true'
+                   }
+            }
+        }
             
-        stage('DeployToProduction') {
+        stage('Deploy') {
             
             steps {
-                input 'Deploy to Production?'
-               milestone(1)
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'sample.yml',
-                    enableConfigSubstitution: true
-                )
+                        withMaven(jdk: 'Java', maven: 'Maven') {
+                        sh 'mvn deploy -Drat.skip=true'
+                    }    
             }
         }
     }
 }
-
