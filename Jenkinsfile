@@ -35,14 +35,5 @@ pipeline {
                    }
             }
         }
-            
-        stage('Deploy') {
-            
-            steps {
-                        withMaven(jdk: 'Java', maven: 'Maven') {
-                        sh 'mvn deploy -Drat.skip=true'
-                    }    
-            }
-        }
     }
 }
