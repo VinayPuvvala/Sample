@@ -9,9 +9,9 @@ pipeline {
         stage('build && SonarQube analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                   //withMaven(jdk: 'Java', maven: 'Maven') {
+                   withMaven(jdk: 'Java', maven: 'Maven') {
                       sh 'mvn clean compile sonar:sonar -Drat.skip=true'
-                    //}
+                    }
                 }
             }
         }
@@ -30,9 +30,9 @@ pipeline {
         }
         stage('Package') {
             steps {
-                      // withMaven(jdk: 'Java', maven: 'Maven') {
+                       withMaven(jdk: 'Java', maven: 'Maven') {
                         sh 'mvn package -Drat.skip=true'
-                   //}
+                   }
             }
         }
     }
