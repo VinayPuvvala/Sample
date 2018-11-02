@@ -633,7 +633,7 @@ http://54.165.39.122:9000
                 </configuration>
               </execution>
             </executions>
-          </plugin>
+            </plugin>
         </plugins>
       </build>
     </profile>
