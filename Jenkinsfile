@@ -23,11 +23,6 @@ pipeline {
                     waitForQualityGate abortPipeline: true
            }
         }
-        stage('Jacoco') {
-           steps {
-                jacoco()
-           }
-        }
         stage('Package') {
             steps {
                        withMaven(jdk: 'Java', maven: 'Maven') {
